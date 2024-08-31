@@ -5,9 +5,11 @@ const router = express.Router();
 
 // Create a new song
 router.post('/', async (req, res) => {
+  const { title ,artist ,album ,genre ,image } = await req.body;
+  console.log(req.body)
   try {
     await connectToDB()
-    const song = new Song(req.body);
+    const song = new Song({title ,artist ,album ,genre ,image});
     await song.save();
     res.status(201).send(song);
   } catch (err) {

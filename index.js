@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const songRoutes = require('./routes/songs.js'); 
 
 dotenv.config();
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -16,5 +17,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running succesfully`);
 });

@@ -14,6 +14,7 @@ const connectToDB = async () => {
   try {
     console.log("isConnected")
     await mongoose.connect(process.env.MONGODB_URI, {
+      dbName: "Cluster0",
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
