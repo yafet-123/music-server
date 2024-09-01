@@ -30,6 +30,47 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get statistics
+router.get('/stats', async (req, res) => {
+  try {
+    await connectToDB();
+
+    const totalSongs = await Song.countDocuments();
+    console.log('Total Songs:', totalSongs);
+
+    const totalArtists = await Song.distinct('artist').then(artists => artists.length);
+    console.log('Total Artists:', totalArtists);
+
+    const totalAlbums = await Song.distinct('album').then(albums => albums.length);
+    console.log('Total Albums:', totalAlbums);
+
+    const totalGenres = await Song.distinct('genre').then(genres => genres.length);
+    console.log('Total Genres:', totalGenres);
+
+    const songsByGenre = await Song.aggregate([
+      { $group: { _id: '$genre', count: { $sum: 1 } } },
+    ]);
+    console.log('Songs by Genre:', songsByGenre);
+
+    const songsByArtist = await Song.aggregate([
+      { $group: { _id: '$artist', songs: { $sum: 1 }, albums: { $addToSet: '$album' } } },
+    ]);
+    console.log('Songs by Artist:', songsByArtist);
+
+    res.status(200).send({
+      totalSongs,
+      totalArtists,
+      totalAlbums,
+      totalGenres,
+      songsByGenre,
+      songsByArtist,
+    });
+  } catch (err) {
+    console.error('Error occurred:', err);
+    res.status(500).send(err);
+  }
+});
+
 // Get a song by ID
 router.get('/:id', async (req, res) => {
   try {
@@ -64,36 +105,6 @@ router.delete('/:id', async (req, res) => {
     const song = await Song.findByIdAndDelete(req.params.id);
     if (!song) return res.status(404).send();
     res.status(200).send(song);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-// Get statistics
-router.get('/stats', async (req, res) => {
-  try {
-    await connectToDB()
-    const totalSongs = await Song.countDocuments();
-    const totalArtists = await Song.distinct('artist').then(artists => artists.length);
-    const totalAlbums = await Song.distinct('album').then(albums => albums.length);
-    const totalGenres = await Song.distinct('genre').then(genres => genres.length);
-
-    const songsByGenre = await Song.aggregate([
-      { $group: { _id: '$genre', count: { $sum: 1 } } },
-    ]);
-
-    const songsByArtist = await Song.aggregate([
-      { $group: { _id: '$artist', songs: { $sum: 1 }, albums: { $addToSet: '$album' } } },
-    ]);
-
-    res.status(200).send({
-      totalSongs,
-      totalArtists,
-      totalAlbums,
-      totalGenres,
-      songsByGenre,
-      songsByArtist,
-    });
   } catch (err) {
     res.status(500).send(err);
   }
