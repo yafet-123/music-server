@@ -1,4 +1,4 @@
-A RESTful API built with Express.js and MongoDB for managing a music library. The API supports CRUD operations for songs and provides statistics on the collection, including total songs, distinct artists, albums, genres, and more.
+A RESTful API built with Express.js , docker and MongoDB for managing a music library. The API supports CRUD operations for songs and provides statistics on the collection, including total songs, distinct artists, albums, genres, and more.
 
 Endpoints:
 
