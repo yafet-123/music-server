@@ -3,9 +3,14 @@ A RESTful API built with Express.js and MongoDB for managing a music library. Th
 Endpoints:
 
 POST /songs: Add a new song.
+
 GET /songs: Retrieve all songs.
+
 GET /songs/stats: Get music collection statistics.
+
 GET /songs/:id: Retrieve a specific song by its ID.
+
 PUT /songs/:id: Update a song by its ID.
+
 DELETE /songs/:id: Delete a song by its ID.
  
